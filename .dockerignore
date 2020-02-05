@@ -1,0 +1,6 @@
+Dockerfile
+.git
+.cache
+*.pyc
+*.mmdb
+__pycache__/
