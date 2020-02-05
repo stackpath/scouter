@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-# pylint: disable=locally-disabled, missing-docstring, import-error
+# pylint: disable=locally-disabled, missing-docstring, import-error, invalid-name
 
 from secrets import token_hex
-import os
-import re
 import json
 from flask import Flask, jsonify, request, abort, make_response
 from waitress import serve
@@ -27,6 +25,7 @@ def check_auth_header():
         return abort(403)
     if token != CONFIG["api_secret"]:
         return abort(403)
+    return None
 
 
 @app.route("/api/v1.0/tests", methods=["POST"])
