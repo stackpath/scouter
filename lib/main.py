@@ -1,9 +1,8 @@
 # pylint: disable=locally-disabled, missing-docstring, import-error, wildcard-import, broad-except
 
 from secrets import token_hex
-import threading
 import json
-import multiprocessing.pool
+import multiprocessing
 import uwsgi
 from lib.utilities import *
 
@@ -152,7 +151,7 @@ def _create_worker_pool(receipt, test_data, max_threads, stop_event):
         receipt     (str)  : The UWSGI cache-key to append test results to.
         test_data   (dict) : The tests to execute.
         max_threads (int)  : The maximum number of parallel threads to be used in the worker pool
-        stop_event  (class): Threading event class used to stop the daemon upon completion.
+        stop_event  (class): Multiprocessing event class used to stop the daemon upon completion.
 
     """
     tests = []
@@ -167,9 +166,9 @@ def _create_worker_pool(receipt, test_data, max_threads, stop_event):
     uwsgi.cache_update(receipt, json.dumps(test_status), 600, "receipts")
     # Execute tests in parallel.
     if len(tests) < max_threads:
-        pool = multiprocessing.pool.ThreadPool(len(tests))
+        pool = multiprocessing.Pool(len(tests))
     else:
-        pool = multiprocessing.pool.ThreadPool(max_threads)
+        pool = multiprocessing.Pool(max_threads)
     result = pool.map(_worker, tests)
     # Wait for ALL results before terminating the pool.
     pool.close()
@@ -196,9 +195,8 @@ def execute_tests(receipt, test_data, max_threads):
         max_threads (int) : The maximum number of parallel threads to be used in the worker pool.
 
     """
-    stop_event = threading.Event()
-    thread = threading.Thread(
+    stop_event = multiprocessing.Event()
+    process = multiprocessing.Process(
         target=_create_worker_pool, args=(receipt, test_data, max_threads, stop_event)
     )
-    thread.daemon = True
-    thread.start()
+    process.start()

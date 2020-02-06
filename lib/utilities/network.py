@@ -1,5 +1,6 @@
 # pylint: disable=locally-disabled, missing-docstring
 
+import os
 import time
 import geoip2
 import geoip2.database
@@ -66,9 +67,9 @@ def ping(dst, **kwargs):
     # return from its receive loop. Adding a custom BPF filter stops this from occurring.
     packet_filter = f"(src host {dst} or dst host {dst}) and icmp"
     for seq in range(0, count):
-        packet = ICMP(id=RandShort(), seq=seq) / Raw(RandString(size=payload_size))
+        packet = ICMP(id=os.getpid(), seq=seq) / Raw(RandString(size=payload_size))
         ans = sr(
-            IP(dst=dst, id=RandShort()) / packet,
+            IP(dst=dst, id=os.getpid()) / packet,
             iface=iface,
             filter=packet_filter,
             timeout=constants.PACKET_RECV_TIMEOUT,
@@ -77,18 +78,19 @@ def ping(dst, **kwargs):
         )[0]
         # Check if we got an echo-reply.
         if ans and ans[0][1][1].code == 0:
-            rtt.append((ans[0][1].time - ans[0][0].sent_time) * 1000.0)
+            rtt_ms = (ans[0][1].time - ans[0][0].sent_time) * 1000.0
+            rtt.append(rtt_ms)
             result["replies"].append(
                 {
                     "seq": ans[0][1].seq,
                     "ttl": ans[0][1].ttl,
                     "len": ans[0][1].len - 20,  # Bytes received minus the IP header.
-                    "rtt_ms": (ans[0][1].time - ans[0][0].sent_time) * 1000.0,
+                    "rtt_ms": rtt_ms,
                 }
             )
         time.sleep(constants.PACKET_SEND_DELAY)
     # Calculate packet loss.
-    result["loss"] = f"{abs((100 * (len(rtt) - count) / count))}%"
+    result["loss"] = abs((100 * (len(rtt) - count) / count))
     # Set RTT timings if packets were received.
     if rtt:
         result["rtt"]["min"] = format(min(rtt), ".3f")

@@ -2,6 +2,7 @@ FROM python:3.7.3-alpine
 
 RUN apk add --no-cache \
   bash \
+  wget \
   tcpdump \
   unzip \
   tar \
@@ -25,9 +26,8 @@ ARG GECKO_PATH="$GECKO_TAG/geckodriver-$GECKO_TAG-linux64.tar.gz"
 ARG BUP_TAG="2.0.1"
 ARG BUP_PATH="v$BUP_TAG/browserup-proxy-$BUP_TAG.zip"
 
-RUN apk add --no-cache --virtual builddeps build-base curl-dev wget linux-headers \
+RUN apk add --no-cache --virtual builddeps build-base curl-dev linux-headers \
     && pip install --no-cache-dir -r requirements.txt \
-    && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz \
     && wget -q https://github.com/mozilla/geckodriver/releases/download/$GECKO_PATH \
     && wget -q https://github.com/browserup/browserup-proxy/releases/download/$BUP_PATH \
     && apk del builddeps
