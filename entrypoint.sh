@@ -25,6 +25,16 @@ fi
 /bin/sed -i -e "s/{{SCOUTER_MAX_THREAD_COUNT}}/${SCOUTER_MAX_THREAD_COUNT}/g" config.cfg
 
 # -----------------------------------------------
+# Pull the latest GeoLite2-ASN MMDB
+# -----------------------------------------------
+echo "===> Pulling latest GeoLite2-ASN MMDB"
+if [[ ${MMDB_LICENSE_KEY:-""} == "" ]]; then
+  echo "ERROR: Missing ENV MMDB_LICENSE_KEY. Cannot proceed."
+  exit 1
+fi
+wget -q -O GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MMDB_LICENSE_KEY&suffix=tar.gz"
+
+# -----------------------------------------------
 # Configure Nginx
 # -----------------------------------------------
 echo "===> Configuring Nginx"

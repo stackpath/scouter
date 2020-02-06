@@ -20,6 +20,10 @@ You'll need docker installed in order to run this container.
 * [macOS](https://docs.docker.com/mac/started/)
 * [Linux](https://docs.docker.com/linux/started/)
 
+You'll also need to [sign up for a GeoLite2 account](https://www.maxmind.com/en/geolite2/signup) and generate a license key. License keys can be generated free of charge and are used to authorize access to download MaxMind databases.
+
+The **GeoLite2-ASN** MaxMind database is used to translate source IP addresses in both the traceroute and dns_traceroute utilities into their associated Autonomous System Numbers.
+
 ### Building From Source
 
 Run the following to build the Scouter container from source.
@@ -42,6 +46,7 @@ Coming soon!
 #### Required Variables
 
 * `SCOUTER_API_SECRET` - Specify the shared API secret to be used to authenticate every API call.
+* `MMDB_LICENSE_KEY` - Specify one of your valid GeoLite2 license keys to be used when pulling the latest GeoLite2-ASN.mmdb.
 
 #### Optional Variables
 
