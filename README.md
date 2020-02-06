@@ -20,7 +20,9 @@ You'll need docker installed in order to run this container.
 * [macOS](https://docs.docker.com/mac/started/)
 * [Linux](https://docs.docker.com/linux/started/)
 
-You'll also need to [sign up for a GeoLite2 account](https://www.maxmind.com/en/geolite2/signup), and generate a license key. License keys can be generated free of charge and are used to authorize access to download MaxMind databases.
+You'll also need to [sign up for a GeoLite2 account](https://www.maxmind.com/en/geolite2/signup) and generate a license key. License keys can be generated free of charge and are used to authorize access to download MaxMind databases.
+
+The **GeoLite2-ASN** MaxMind database is used to translate source IP addresses in both the traceroute and dns_traceroute utilities into their associated Autonomous System Numbers.
 
 ### Building From Source
 
