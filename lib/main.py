@@ -2,6 +2,7 @@
 
 from secrets import token_hex
 import json
+import threading
 import multiprocessing
 import uwsgi
 from lib.utilities import *
@@ -118,7 +119,7 @@ def _traceroute(options, test_data):
 
 
 def _worker(test):
-    """Thread worker to execute tests."""
+    """Process pool worker to execute tests."""
     # Check if a custom identifier was provided in the test; if not, add one.
     test_id = test["options"]["id"] if test["options"].get("id") else token_hex(3)
     test_data = {"id": test_id, "failed": True, "message": None, "result": {}}
@@ -142,16 +143,16 @@ def _worker(test):
     return {"type": test["type"], "results": test_data}
 
 
-def _create_worker_pool(receipt, test_data, max_threads, stop_event):
+def _create_worker_pool(receipt, test_data, max_procs, stop_event):
     """Parse provided test data and ensure that all test options are properly formatted
-    before passing off to the worker threads in the pool. Once the tests have been completed;
+    before passing off to the worker procs in the pool. Once the tests have been completed;
     update the UWSGI cache-key with the results.
 
     Args:
         receipt     (str)  : The UWSGI cache-key to append test results to.
         test_data   (dict) : The tests to execute.
-        max_threads (int)  : The maximum number of parallel threads to be used in the worker pool
-        stop_event  (class): Multiprocessing event class used to stop the daemon upon completion.
+        max_procs   (int)  : The maximum number of parallel processes to be used in the worker pool
+        stop_event  (class): Threading event class used to stop the daemon upon completion.
 
     """
     tests = []
@@ -165,10 +166,10 @@ def _create_worker_pool(receipt, test_data, max_threads, stop_event):
                 test_status["results"][test_type] = []
     uwsgi.cache_update(receipt, json.dumps(test_status), 600, "receipts")
     # Execute tests in parallel.
-    if len(tests) < max_threads:
+    if len(tests) < max_procs:
         pool = multiprocessing.Pool(len(tests))
     else:
-        pool = multiprocessing.Pool(max_threads)
+        pool = multiprocessing.Pool(max_procs)
     result = pool.map(_worker, tests)
     # Wait for ALL results before terminating the pool.
     pool.close()
@@ -183,7 +184,7 @@ def _create_worker_pool(receipt, test_data, max_threads, stop_event):
     stop_event.set()
 
 
-def execute_tests(receipt, test_data, max_threads):
+def execute_tests(receipt, test_data, max_procs):
     """This is a glue function where every part of Scouter comes together into one.
 
     Parse and execute tests in a background daemon thread. Pass all data to a worker pool
@@ -192,11 +193,12 @@ def execute_tests(receipt, test_data, max_threads):
     Args:
         receipt     (str) : The UWSGI cache-key to append test results to.
         test_data   (dict): The tests to execute.
-        max_threads (int) : The maximum number of parallel threads to be used in the worker pool.
+        max_procs   (int) : The maximum number of parallel processes to be used in the worker pool.
 
     """
-    stop_event = multiprocessing.Event()
-    process = multiprocessing.Process(
-        target=_create_worker_pool, args=(receipt, test_data, max_threads, stop_event)
+    stop_event = threading.Event()
+    thread = threading.Thread(
+        target=_create_worker_pool, args=(receipt, test_data, max_procs, stop_event)
     )
-    process.start()
+    thread.daemon = True
+    thread.start()

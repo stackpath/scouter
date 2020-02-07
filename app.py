@@ -47,7 +47,7 @@ def create_tests():
     # Generate the client's receipt and pass the test payload to a background thread to be executed.
     receipt = token_hex(16)
     uwsgi.cache_set(receipt, "{}", 600, "receipts")
-    execute_tests(receipt, payload, CONFIG["max_thread_count"])
+    execute_tests(receipt, payload, CONFIG["max_process_count"])
     return jsonify({"receipt": receipt})
 
 
