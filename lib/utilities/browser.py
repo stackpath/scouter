@@ -123,21 +123,23 @@ def _setup_proxy(headers):
     return proxy
 
 
-def browser_request(url, driver="chrome", headers=None):
+def browser_request(url, **kwargs):
     """Execute a browser emulated HTTP request.
 
     Attempt to load a provided webpage via a specified Browser, and return HAR data collected
     by a newly created proxy server.
 
     Args:
-        url     (str) : The webpage URL to attempt to load via the emulated browser.
-        driver  (str) : The browser driver to use in the request. Defaults to "chrome".
-        headers (dict): A key/value dict of HTTP request headers to inject. Defaults to None.
+        url       (str)  : The webpage URL to attempt to load via the emulated browser.
+        **driver  (str)  : The browser driver to use in the request. Defaults to "chrome".
+        **headers (dict) : A key/value dict of HTTP request headers to inject. Defaults to None.
 
     Returns:
         dict: Returns a dictionary object with test results.
 
     """
+    driver = kwargs.get("driver", "chrome").lower()
+    headers = kwargs.get("headers", None)
     headers = headers if headers is not None else {}
     failed = True
     proxy = _setup_proxy(headers)
