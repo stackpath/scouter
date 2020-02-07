@@ -4,7 +4,7 @@
 # Assign defaults if variable not set
 # -----------------------------------------------
 export SCOUTER_MAX_TEST_COUNT=${SCOUTER_MAX_TEST_COUNT:=10}
-export SCOUTER_MAX_THREAD_COUNT=${SCOUTER_MAX_THREAD_COUNT:=10}
+export SCOUTER_MAX_PROCESS_COUNT=${SCOUTER_MAX_PROCESS_COUNT:=10}
 export API_PORT=${API_PORT:=8000}
 export UWSGI_WORKERS=${UWSGI_WORKERS:=3}
 export UWSGI_CACHE_ITEMS=${UWSGI_CACHE_ITEMS:=100}
@@ -22,7 +22,7 @@ if [[ ${SCOUTER_API_SECRET:-""} == "" ]]; then
 fi
 /bin/sed -i -e "s/{{SCOUTER_API_SECRET}}/${SCOUTER_API_SECRET}/g" config.cfg
 /bin/sed -i -e "s/{{SCOUTER_MAX_TEST_COUNT}}/${SCOUTER_MAX_TEST_COUNT}/g" config.cfg
-/bin/sed -i -e "s/{{SCOUTER_MAX_THREAD_COUNT}}/${SCOUTER_MAX_THREAD_COUNT}/g" config.cfg
+/bin/sed -i -e "s/{{SCOUTER_MAX_PROCESS_COUNT}}/${SCOUTER_MAX_PROCESS_COUNT}/g" config.cfg
 
 # -----------------------------------------------
 # Pull the latest GeoLite2-ASN MMDB

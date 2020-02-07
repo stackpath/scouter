@@ -51,7 +51,7 @@ Coming soon!
 #### Optional Variables
 
 * `SCOUTER_MAX_TEST_COUNT` - Specify the maximum number of individual tests in a single test payload. Defaults to **10**.
-* `SCOUTER_MAX_THREAD_COUNT` - Specify the maximum number of parallel threads to be used in test execution. Defaults to **10**.
+* `SCOUTER_MAX_PROCESS_COUNT` - Specify the maximum number of parallel processes to be used in test execution. Defaults to **10**.
 * `API_PORT` - Specify the port that Nginx will be listening on. Defaults to **8000**.
 * `UWSGI_WORKERS` - Specify the number of Uwsgi worker processes to use. Defaults to **3**.
 * `UWSGI_CACHE_ITEMS` - Specify the maximum number of Uwsgi cache items. Defaults to **100**.
