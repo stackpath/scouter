@@ -283,11 +283,6 @@ Test deletions should produce a success message:
 * [Selenium](https://selenium-python.readthedocs.io/)
 * [BrowserUp Proxy](https://github.com/browserup/browserup-proxy)
 
-## Contributing
-
-For any major changes, please open a JIRA in the PERSRE project detailing
-what you would like to change.
-
 ## Authors
 
 * **[@aaroncouch](https://github.com/aaroncouch)** - Initial work
