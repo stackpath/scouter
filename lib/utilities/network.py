@@ -172,7 +172,7 @@ def traceroute(dst, **kwargs):
     )
     # Tell Scapy to NOT ignore the inner packet source. This is to avoid issues with NAT.
     conf.checkIPsrc = False
-    for ttl in range(constants.TRACE_MIN_TTL, constants.TRACE_MAX_TTL + 1):
+    for ttl in range(constants.TRACE_MIN_TTL, max_ttl + 1):
         hop_data = {
             "asn": None,
             "ttl": ttl,
