@@ -151,7 +151,7 @@ def browser_request(url, **kwargs):
         proxy.close()
         raise Exception(f"Provided driver of '{driver}' is not supported.")
     webdriver_.set_page_load_timeout(constants.WEBPAGE_LOAD_TIMEOUT)
-    har = {"child": []}
+    har = {"driver": driver, "child": []}
     try:
         webdriver_.get(url)
     except Exception as error:  # pylint: disable=broad-except
