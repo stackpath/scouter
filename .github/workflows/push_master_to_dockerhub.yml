@@ -1,0 +1,22 @@
+name: Push the latest tag to DockerHub
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish to DockerHub
+      if: success()
+      uses: manusa/actions-publish-docker@master
+      with:
+        name: stackpath/scouter
+        tag: latest
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
