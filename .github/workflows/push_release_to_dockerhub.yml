@@ -1,0 +1,21 @@
+name: Push a release to DockerHub
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish to DockerHub
+      if: success()
+      uses: manusa/actions-publish-docker@master
+      with:
+        name: stackpath/scouter
+        tag: ${GITHUB_REF}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
