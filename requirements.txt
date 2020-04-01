@@ -7,7 +7,7 @@ geoip2==2.9.0
 scapy==2.4.3
 circus==0.15.0
 tornado==4.5.3
-psutil==5.6.3
+psutil==5.6.6
 pyzmq==16.0.4
 MarkupSafe==1.1.1
 uwsgi==2.0.18
