@@ -27,6 +27,8 @@ def ping(dst, **kwargs):
         dict: Returns a dictionary object with test results.
 
     """
+    # Tell Scapy to NOT sniff in promiscuous mode.
+    conf.sniff_promisc = False
     rtt = []
     comment = None
     count = kwargs.get("count", 10)
@@ -119,6 +121,8 @@ def traceroute(dst, **kwargs):
         dict: Returns a dictionary object with test results.
 
     """
+    # Tell Scapy to NOT sniff in promiscuous mode.
+    conf.sniff_promisc = False
     comment = None
     asn_mmdb_reader = geoip2.database.Reader("mmdb/GeoLite2-ASN.mmdb")
     proto = kwargs.get("proto", "ICMP").upper()

@@ -51,6 +51,8 @@ def dns_lookup(qname, **kwargs):
         dict: Returns a dictionary object with test results.
 
     """
+    # Tell Scapy to NOT sniff in promiscuous mode.
+    conf.sniff_promisc = False
     dnscodes = {
         0: "ok",
         1: "format-error",
@@ -154,6 +156,8 @@ def dns_traceroute(qname, **kwargs):
         dict: Returns a dictionary object with test results.
 
     """
+    # Tell Scapy to NOT sniff in promiscuous mode.
+    conf.sniff_promisc = False
     asn_mmdb_reader = geoip2.database.Reader("mmdb/GeoLite2-ASN.mmdb")
     nameservers = kwargs.get("ns", None)
     nameservers = nameservers if nameservers is not None else _get_nameservers()
