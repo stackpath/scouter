@@ -1,4 +1,4 @@
-Flask==1.0.2
+Flask==2.3.2
 waitress==1.4.3
 selenium==3.141.0
 requests==2.22.0
