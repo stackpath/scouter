@@ -6,7 +6,7 @@ pycurl==7.43.0.2
 geoip2==2.9.0
 scapy==2.4.3
 circus==0.15.0
-tornado==4.5.3
+tornado==6.3.2
 psutil==5.6.6
 pyzmq==16.0.4
 MarkupSafe==1.1.1
